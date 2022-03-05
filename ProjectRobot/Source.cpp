@@ -3,9 +3,7 @@ using namespace std;
 class Software {
 public:
 	void Start() {
-		int a;
-		int b;
-		int c;
+
 	}
 	void SearchGraffiti() {
 
