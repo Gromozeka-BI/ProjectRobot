@@ -16,20 +16,21 @@ public:
 	}
 };
 class Camera {
+	Mat png;
 public:
 	void TurnOnCamera() {
 
 	}
 	void TakePhoto() {
-
+		return png;
 	}
 };
 class Robot {
 public:
-	void GoToGraffiti() {
+	void GoToGraffiti(int x, int y) {
 
 	}
-	void TurnCleanerOn() {
+	void TurnCleanerOn(bool cleaner) {
 
 	}
 
