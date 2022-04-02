@@ -1,3 +1,4 @@
+#include "Math.h"
 using namespace std;
 
 class Software {
@@ -73,11 +74,17 @@ public:
 };
 class Robot {
 private:
-	int Xroom;
-	int Yroom;
-	int angle;
+	int XRobot; // XRobot, YRobot =  Absolute coordinates of the robot
+	int YRobot; 
+	int XGoal; // XGoal, YGoal = Absolute coordinates of the target
+	int YGoal;
+	int XDirt;	//replace with an array
+	int YDirt;	//replace with an array
+	int epsilon = 2; // The distance to the dirt when the cleaner is turned on
+	int angle; // angle = At what angle is the robot in absolute coordinates
 	int motorLeft; //Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back;0 motor stop)
 	int motorRight; //Takes a value from - 100 to 100 (100 full throttle forward;-100 full throttle back;0 motor stop)
+	bool cleaner = false; 
 	bool reverseRightMotor = false;
 	bool reverseLeftMotor = false;
 
@@ -94,14 +101,20 @@ public:
 		this->reverseRightMotor = reverseRightMotor;
 		this->reverseLeftMotor = reverseLeftMotor;
 	}
-	void SetX(int Xroom) {
-		this-> = Xroom;
+	void SetXRobot(int XRobot) {
+		this->XRobot = XRobot;
 	}
-	void SetY(int Yroom) {
-		this->Yroom = Yroom;
+	void SetYRobot(int YRobot) {
+		this->YRobot = YRobot;
 	}
-	void SetAngle(int Angle) {
-		this->angle = Angle;
+	void SetXGoal(int XGoal) {
+		this->XGoal = XGoal;
+	}
+	void SetYGoal(int YGoal) {
+		this->YGoal = YGoal;
+	}
+	void SetAngle(int angle) {
+		this->angle = angle;
 	}
 	void AcroMod(int angle, int throttle, int& motorRight, int& motorLeght) { //Mode for testing the robot 
 		// angle = Takes a value from -100 to 100 (100 maximum right rotation;-100 maximum left rotation)
@@ -119,12 +132,30 @@ public:
 			motorLeft = motorLeft * (-1);
 		}
 	}
-	void AutomaticMod() {
-		
-	}
-	void TurnCleanerOn(bool cleaner) {
+	void AutomaticMod(int angle, int XRobot, int YRobot, int XGoal, int YGoal, int& Ang, int& Thr) {
+		// angle = At what angle is the robot in absolute coordinates
+		// XRobot, YRobot =  Absolute coordinates of the robot
+		// XGoal, YGoal = Absolute coordinates of the target
+		// Ang = Takes a value from -100 to 100 (100 maximum right rotation;-100 maximum left rotation)
+		// Thr = Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back)
+		//	1) We rotate to get to one straight line
+		//  2) We are going to the point
+
+		//...........
+
+		// There should be a code here
+
+		//...........
 
 	}
+	bool TurnCleaner(int XRobot, int YRobot, int XDirt, int YDirt, int E) {
+		if ((abs(XRobot - XDirt) < E) && (abs(YRobot - YDirt) < E)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
 };
 
 
