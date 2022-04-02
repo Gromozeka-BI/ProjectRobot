@@ -73,8 +73,8 @@ public:
 };
 class Robot {
 private:
-	int x;
-	int y;
+	int Xroom;
+	int Yroom;
 	int angle;
 	int motorLeft; //Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back;0 motor stop)
 	int motorRight; //Takes a value from - 100 to 100 (100 full throttle forward;-100 full throttle back;0 motor stop)
@@ -95,32 +95,28 @@ public:
 		this->reverseLeftMotor = reverseLeftMotor;
 	}
 	void SetX(int Xroom) {
-		this->x = Xroom;
+		this-> = Xroom;
 	}
 	void SetY(int Yroom) {
-		this->y = Yroom;
+		this->Yroom = Yroom;
 	}
 	void SetAngle(int Angle) {
 		this->angle = Angle;
 	}
-	void AcroMod(int angle, int throttle, int& motorLeft, int& motorRight) { //Mode for testing the robot 
+	void AcroMod(int angle, int throttle, int& motorRight, int& motorLeght) { //Mode for testing the robot 
 		// angle = Takes a value from -100 to 100 (100 maximum right rotation;-100 maximum left rotation)
 		// throttle = Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back)
 		// right rotation (motor Right -100/ motor Left 100)
 		// left rotation (motor Right 100/ motor Left -100)
 		// riding forward (motor Right 100/ motor Left 100)
 		// riding back (motor Right 100/ motor Left 100)
-		if (!GetRightMotor()) {
-
+		motorRight = throttle + angle * (-1);
+		motorLeft = throttle + angle;
+		if (GetRightMotor()) {
+			motorRight = motorRight * (-1);
 		}
-		else {
-
-		}
-		if (!GetLeftMotor()) {
-
-		}
-		else {
-
+		if (GetLeftMotor()) {
+			motorLeft = motorLeft * (-1);
 		}
 	}
 	void AutomaticMod() {
