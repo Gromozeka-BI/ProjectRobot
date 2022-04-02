@@ -116,7 +116,7 @@ public:
 	void SetAngle(int angle) {
 		this->angle = angle;
 	}
-	void AcroMod(int angle, int throttle, int& motorRight, int& motorLeght) { //Mode for testing the robot 
+	void AcroMod(int angle, int throttle, int& motorRight, int& motorLeft) { //Mode for testing the robot 
 		// angle = Takes a value from -100 to 100 (100 maximum right rotation;-100 maximum left rotation)
 		// throttle = Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back)
 		// right rotation (motor Right -100/ motor Left 100)
@@ -148,18 +148,54 @@ public:
 		//...........
 
 	}
-	bool TurnCleaner(int XRobot, int YRobot, int XDirt, int YDirt, int E) {
-		if ((abs(XRobot - XDirt) < E) && (abs(YRobot - YDirt) < E)) {
+	bool TurnCleaner(int XRobot, int YRobot, int XDirt, int YDirt) {
+		if ((abs(XRobot - XDirt) < E) && (abs(YRobot - YDirt) < epsilon)) {
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+	void GetEpsilon(int epsilon) {
+		this->epsilon = epsilon;
+	}
 
+	void Go(int motorRight, int motorLeft, int cleaner) {
+		// data transmission to the robot
+	}
 };
 
 
 int main() {
+
+	Robot bob(false, false);
+
+	int angle = 0;
+	int XRobot = 0;
+	int YRobot = 0;
+	int XGoal = 0;
+	int YGoal = 0;
+	int XDirt = 0;
+	int YDirt = 0;
+	int Ang = 0;
+	int Thr = 0;
+	int E = 0;
+
+	bool cleaner = false;
+	int motorRight = 0;
+	int motorLeft = 0;
+
+	bob.GetEpsilon(E);
+
+	while (1) {
+		bob.AutomaticMod(angle, XRobot, YRobot, XGoal, YGoal, Ang, Thr);
+		bob.AcroMod(Ang, Thr, motorRight, motorLeft);
+		cleaner = bob.TurnCleaner(XRobot, YRobot, XDirt, YDirt);
+		bob.Go(motorRight, motorLeft, cleaner);
+	}
+
+
+
 
 }
 
