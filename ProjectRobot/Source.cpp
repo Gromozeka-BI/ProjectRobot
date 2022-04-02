@@ -2,10 +2,11 @@ using namespace std;
 
 class Software {
 private:
-	int Xphoto;
-	int Yphoto;
-	int Xroom;
-	int Yroom;
+	int Xphoto;//replace with an array
+	int Yphoto;//replace with an array
+	int Xroom;//replace with an array
+	int Yroom;//replace with an array
+	int Angle;
 public:
 	void Room() {
 		//Room size
@@ -15,22 +16,35 @@ public:
 		//Location camera (X,Y,Z)
 		//Angles 
 	}
-	void SearchGraffiti(int Xphoto, int Yphoto, int& Xroom, int& Yroom) { 
+	void SearchGraffiti(int Xphoto, int Yphoto, int& Xroom, int& Yroom) {
 		// search for dirt coordinates
 		// translation from the coordinate system of the photo to the coordinate system of the room
 	}
-	int GetX() {
+	void SearchRobot(int Xphoto, int Yphoto, int& Xroom, int& Yroom) {
+		// search for Robot coordinates
+		// translation from the coordinate system of the photo to the coordinate system of the room
+	}
+	int GetXdirt() {
 		return Xroom;
 	}
-	int GetY() {
+	int GetYdirt() {
 		return Yroom;
+	}
+	int GetXRobot() {
+		return Xroom;
+	}
+	int GetYRobot() {
+		return Yroom;
+	}
+	int GetAngleRobot() {
+		return Angle;
 	}
 };
 class Camera {
 private:
 	Mat png;
-	int x;
-	int y;
+	int x;//replace with an array
+	int y;//replace with an array
 public:
 	void dirtSearch() {
 		TurnOnCamera();
@@ -61,15 +75,56 @@ class Robot {
 private:
 	int x;
 	int y;
+	int angle;
+	int motorLeft; //Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back;0 motor stop)
+	int motorRight; //Takes a value from - 100 to 100 (100 full throttle forward;-100 full throttle back;0 motor stop)
+	bool reverseRightMotor = false;
+	bool reverseLeftMotor = false;
+
+
+	bool GetRightMotor() {
+		return reverseRightMotor;
+	}
+	bool GetLeftMotor() {
+		return reverseLeftMotor;
+	}
+
 public:
+	Robot(bool reverseRightMotor, bool reverseLeftMotor) {
+		this->reverseRightMotor = reverseRightMotor;
+		this->reverseLeftMotor = reverseLeftMotor;
+	}
 	void SetX(int Xroom) {
 		this->x = Xroom;
 	}
 	void SetY(int Yroom) {
 		this->y = Yroom;
 	}
-	void GoToGraffiti(int x, int y) {
+	void SetAngle(int Angle) {
+		this->angle = Angle;
+	}
+	void AcroMod(int angle, int throttle, int& motorLeft, int& motorRight) { //Mode for testing the robot 
+		// angle = Takes a value from -100 to 100 (100 maximum right rotation;-100 maximum left rotation)
+		// throttle = Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back)
+		// right rotation (motor Right -100/ motor Left 100)
+		// left rotation (motor Right 100/ motor Left -100)
+		// riding forward (motor Right 100/ motor Left 100)
+		// riding back (motor Right 100/ motor Left 100)
+		if (!GetRightMotor()) {
 
+		}
+		else {
+
+		}
+		if (!GetLeftMotor()) {
+
+		}
+		else {
+
+		}
+	}
+	void AutomaticMod() {
+		
 	}
 	void TurnCleanerOn(bool cleaner) {
 
