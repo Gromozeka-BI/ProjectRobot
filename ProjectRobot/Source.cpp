@@ -1,4 +1,5 @@
-#include "Math.h"
+﻿#include "Math.h"
+#include <iostream>
 using namespace std;
 
 class Software {
@@ -88,6 +89,14 @@ private:
 	bool reverseRightMotor = false;
 	bool reverseLeftMotor = false;
 
+	float dt = 0; // Time of one clock cycle
+	float aP = 0; // PIDs for the angle
+	float aI = 0;
+	float aD = 0;
+	float lP = 0; // PIDs for the length
+	float lI = 0;
+	float lD = 0;
+
 
 	bool GetRightMotor() {
 		return reverseRightMotor;
@@ -116,6 +125,16 @@ public:
 	void SetAngle(int angle) {
 		this->angle = angle;
 	}
+	void SetPID(float dt, float aP, float aI, float aD, float lP, float lI, float lD) {
+		this->dt = dt;
+		this->aP = aP;
+		this->aI = aI;
+		this->aD = aD;
+		this->lP = lP;
+		this->lI = lI;
+		this->lD = lD;
+	}
+
 	void AcroMod(int angle, int throttle, int& motorRight, int& motorLeft) { //Mode for testing the robot 
 		// angle = Takes a value from -100 to 100 (100 maximum right rotation;-100 maximum left rotation)
 		// throttle = Takes a value from -100 to 100 (100 full throttle forward;-100 full throttle back)
@@ -145,11 +164,30 @@ public:
 
 		// There should be a code here
 
+		float l_prevErr;
+		float a_prevErr;
+
+		float x1 = XRobot;
+		float y1 = YRobot;
+		float x2 = XGoal;
+		float y2 = YGoal;
+		float α = angle;
+		float b = atan((y2-y1)/(x2-x1)) * 180 / 3.1415;
+		float φ = α - b;
+		float l = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+
+
+		float klP = l;
+		float klI = klI + l * dt;
+		float klD = (l- l_prevErr) / dt;
+		l_prevErr = l;
+
+		Thr = constrain(lP * klP + lI * klI + lD * klD); // CHEK
 		//...........
 
 	}
 	bool TurnCleaner(int XRobot, int YRobot, int XDirt, int YDirt) {
-		if ((abs(XRobot - XDirt) < E) && (abs(YRobot - YDirt) < epsilon)) {
+		if ((abs(XRobot - XDirt) < epsilon) && (abs(YRobot - YDirt) < epsilon)) {
 			return true;
 		}
 		else {
@@ -160,7 +198,7 @@ public:
 		this->epsilon = epsilon;
 	}
 
-	void Go(int motorRight, int motorLeft, int cleaner) {
+	void ReturnRobot(int motorRight, int motorLeft, int cleaner) {
 		// data transmission to the robot
 	}
 };
@@ -188,10 +226,10 @@ int main() {
 	bob.GetEpsilon(E);
 
 	while (1) {
-		bob.AutomaticMod(angle, XRobot, YRobot, XGoal, YGoal, Ang, Thr);
-		bob.AcroMod(Ang, Thr, motorRight, motorLeft);
-		cleaner = bob.TurnCleaner(XRobot, YRobot, XDirt, YDirt);
-		bob.Go(motorRight, motorLeft, cleaner);
+		bob.AutomaticMod(angle, XRobot, YRobot, XGoal, YGoal, Ang, Thr); // We pass the coordinates and get the task for the robot
+		bob.AcroMod(Ang, Thr, motorRight, motorLeft); // We translate the task for the robot into the operation of engines
+		cleaner = bob.TurnCleaner(XRobot, YRobot, XDirt, YDirt); // If it is close to dirt then turn on the cleaner
+		bob.ReturnRobot(motorRight, motorLeft, cleaner); // Passing the task to the robot
 	}
 
 
