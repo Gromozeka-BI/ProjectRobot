@@ -1,5 +1,6 @@
-﻿#include "Math.h"
+﻿#include <Math.h>
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 class Software {
@@ -44,26 +45,26 @@ public:
 };
 class Camera {
 private:
-	Mat png;
+	//Mat png;
 	int x;//replace with an array
 	int y;//replace with an array
 public:
 	void dirtSearch() {
 		TurnOnCamera();
-		png = TakePhoto();
-		dirtDetected(png, x, y);
+		//png = TakePhoto();
+		//dirtDetected(png, x, y);
 	}
 
 	void TurnOnCamera() {
 		// Camera ON
 	}
-	Mat TakePhoto() {
+	//Mat TakePhoto() {
 		// Take Photo
-		return png;
-	}
-	void dirtDetected(Mat png, int& x, int& y) {
+		//return png;
+	//}
+	//void dirtDetected(Mat png, int& x, int& y) {
 		// search for dirt coordinates on photo
-	}
+	//}
 
 	int  GetX() { // Return X on Photo
 		return this->x;
@@ -151,7 +152,7 @@ public:
 			motorLeft = motorLeft * (-1);
 		}
 	}
-	void AutomaticMod(int angle, int XRobot, int YRobot, int XGoal, int YGoal, int& Ang, int& Thr) {
+	void AutomaticMod(int angle, int XRobot, int YRobot, int XGoal, int YGoal, int& Ang, float& Thr) {
 		// angle = At what angle is the robot in absolute coordinates
 		// XRobot, YRobot =  Absolute coordinates of the robot
 		// XGoal, YGoal = Absolute coordinates of the target
@@ -164,8 +165,8 @@ public:
 
 		// There should be a code here
 
-		float l_prevErr;
-		float a_prevErr;
+		float l_prevErr = 0;
+		float a_prevErr = 0;
 
 		float x1 = XRobot;
 		float y1 = YRobot;
@@ -176,13 +177,26 @@ public:
 		float φ = α - b;
 		float l = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
-
+		// Thr
 		float klP = l;
-		float klI = klI + l * dt;
+		float klI = klI + l * dt; // chek
 		float klD = (l- l_prevErr) / dt;
 		l_prevErr = l;
 
-		Thr = constrain(lP * klP + lI * klI + lD * klD); // CHEK
+		Thr = lP * klP + lI * klI + lD * klD;
+		if (Thr > 100) Thr = 100;
+		if (Thr < -100) Thr = -100;
+
+		// Ang
+		float kaP = φ;
+		float kaI = kaI + φ * dt; // chek
+		float kaD = (φ - a_prevErr) / dt;
+		a_prevErr = φ;
+
+		Thr = aP * kaP + aI * kaI + aD * kaD;
+		if (Ang > 100) Ang = 100;
+		if (Ang < -100) Ang = -100;
+
 		//...........
 
 	}
@@ -203,7 +217,6 @@ public:
 	}
 };
 
-
 int main() {
 
 	Robot bob(false, false);
@@ -216,7 +229,7 @@ int main() {
 	int XDirt = 0;
 	int YDirt = 0;
 	int Ang = 0;
-	int Thr = 0;
+	float Thr = 0;
 	int E = 0;
 
 	bool cleaner = false;
