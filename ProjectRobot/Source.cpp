@@ -2,8 +2,52 @@
 #include <iostream>
 #include <cmath>
 using namespace std;
+class PID {
+	float kp, ki, kd;
+	int minOut, maxOut;
+	float integral;
+	float prevErr;
+	float dt;
+public:
+	PID() {
+		kp = 0;
+		ki = 0;
+		kd = 0;
+		minOut = 0;
+		maxOut = 0;
+		integral = 0;
+		prevErr = 0;
+		dt = 0;
+	}
+	void GetPID(float kp, float ki, float kd) {
+		this->kp = kp;
+		this->ki = ki;
+		this->kd = kd;
+	}
+	void GetMinMax(int minOut, int maxOut) {
+		this->minOut = minOut;
+		this->maxOut = maxOut;
+	}
+	void GetDt(float dt) {
+		this->dt = dt;
+	}
+	float computePID(float input) {
+		float err = input;
+		integral = integral + (float)err * dt * ki;
+		if (integral > maxOut) integral = maxOut;
+		if (integral < minOut) integral = minOut;
 
-int computePID(int number, float input, float kp, float ki, float kd, float dt, int minOut, int maxOut) {
+		float D = (err - prevErr) / dt;
+		prevErr = err;
+
+		float out = err * kp + integral + D * kd;
+		if (out > maxOut) out = maxOut;
+		if (out < minOut) out = minOut;
+		return out;
+	}
+};
+
+/*int computePID(int number, float input, float kp, float ki, float kd, float dt, int minOut, int maxOut) {
 	float err = input;
 	static float integral[2]{ 0, 0 }, prevErr[2]{ 0, 0 };
 
@@ -18,7 +62,7 @@ int computePID(int number, float input, float kp, float ki, float kd, float dt, 
 	if (out > maxOut) out = maxOut;
 	if (out < minOut) out = minOut;
 	return out;
-}
+}*/
 
 class Software {
 private:
@@ -187,9 +231,16 @@ public:
 		float φ = α - b;
 		float l = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
-
-		Thr = computePID(0, l, lP, lI,lD,  dt, -100, 100);
-		Ang = computePID(1, φ, aP, aI, aD, dt, -100, 100);
+		PID ThrP;
+		PID AngP;
+		ThrP.GetPID(lP, lI, lD);
+		ThrP.GetMinMax(-100, 100);
+		ThrP.GetDt(dt);
+		Thr = ThrP.computePID(l);
+		AngP.GetPID(aP, aI, aD);
+		AngP.GetMinMax(-100, 100);
+		AngP.GetDt(dt);
+		Ang = AngP.computePID(φ);
 
 		//...........
 
@@ -214,7 +265,7 @@ public:
 int main() {
 
 	Robot bob(false, false);
-
+	Robot bob2(false, false);
 	int angle = 0;
 	int XRobot = 0;
 	int YRobot = 0;
