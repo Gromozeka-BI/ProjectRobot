@@ -3,6 +3,23 @@
 #include <cmath>
 using namespace std;
 
+int computePID(int number, float input, float kp, float ki, float kd, float dt, int minOut, int maxOut) {
+	float err = input;
+	static float integral[2]{ 0, 0 }, prevErr[2]{ 0, 0 };
+
+	integral[number] = integral[number] + (float)err * dt * ki;
+	if (integral[number] > maxOut) integral[number] = maxOut;
+	if (integral[number] < minOut) integral[number] = minOut;
+
+	float D = (err - prevErr[number]) / dt;
+	prevErr[number] = err;
+
+	float out = err * kp + integral[number] + D * kd;
+	if (out > maxOut) out = maxOut;
+	if (out < minOut) out = minOut;
+	return out;
+}
+
 class Software {
 private:
 	int Xphoto;//replace with an array
@@ -111,20 +128,16 @@ public:
 		this->reverseRightMotor = reverseRightMotor;
 		this->reverseLeftMotor = reverseLeftMotor;
 	}
-	void SetXRobot(int XRobot) {
+	void SetXYRobot(int XRobot, int YRobot) {
 		this->XRobot = XRobot;
-	}
-	void SetYRobot(int YRobot) {
 		this->YRobot = YRobot;
-	}
-	void SetXGoal(int XGoal) {
-		this->XGoal = XGoal;
-	}
-	void SetYGoal(int YGoal) {
-		this->YGoal = YGoal;
 	}
 	void SetAngle(int angle) {
 		this->angle = angle;
+	}
+	void SetXYGoal(int XGoal, int YGoal) {
+		this->XGoal = XGoal;
+		this->YGoal = YGoal;
 	}
 	void SetPID(float dt, float aP, float aI, float aD, float lP, float lI, float lD) {
 		this->dt = dt;
@@ -165,9 +178,6 @@ public:
 
 		// There should be a code here
 
-		float l_prevErr = 0;
-		float a_prevErr = 0;
-
 		float x1 = XRobot;
 		float y1 = YRobot;
 		float x2 = XGoal;
@@ -177,25 +187,9 @@ public:
 		float φ = α - b;
 		float l = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
-		// Thr
-		float klP = l;
-		float klI = klI + l * dt; // chek
-		float klD = (l- l_prevErr) / dt;
-		l_prevErr = l;
 
-		Thr = lP * klP + lI * klI + lD * klD;
-		if (Thr > 100) Thr = 100;
-		if (Thr < -100) Thr = -100;
-
-		// Ang
-		float kaP = φ;
-		float kaI = kaI + φ * dt; // chek
-		float kaD = (φ - a_prevErr) / dt;
-		a_prevErr = φ;
-
-		Thr = aP * kaP + aI * kaI + aD * kaD;
-		if (Ang > 100) Ang = 100;
-		if (Ang < -100) Ang = -100;
+		Thr = computePID(0, l, lP, lI,lD,  dt, -100, 100);
+		Ang = computePID(1, φ, aP, aI, aD, dt, -100, 100);
 
 		//...........
 
