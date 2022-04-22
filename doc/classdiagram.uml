@@ -1,0 +1,37 @@
+@startuml
+Camera o-- Software
+Software o-- Robot
+
+class Software{
+void Room()
+void Camera()
+void SearchGraffiti()
+void SearchRobot()
+int GetXdirt()
+int GetYdirt()
+int GetXRobot()
+int GetYRobot()
+int GetAngleRobot()
+}
+
+class Camera {
+void dirtSearch()
+void TurnOnCamera()
+Mat TakePhoto()
+void dirtDetected()
+int GetX()
+int GetY()
+}
+
+class Robot {
+Robot(bool reverseRightMotor, bool reverseLeftMotor)
+void SetX()
+void SetY()
+void SetAngle()
+void AcroMod()
+void AutomaticMod()
+void TurnCleanerOn()
+bool TurnCleaner()
+}
+
+@enduml
