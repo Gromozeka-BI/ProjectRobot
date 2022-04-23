@@ -1,6 +1,6 @@
 @startuml
 Camera o-- Software
-Software o-- Robot
+Software <.. Robot
 
 class Software{
 void Room()
