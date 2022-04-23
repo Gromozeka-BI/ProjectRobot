@@ -1,0 +1,9 @@
+@startuml
+actor SmartCamera #red
+
+SmartCamera -> Robot: GraffitiRecognized()
+Robot -> Robot: Turn motor on
+SmartCamera -> Robot: MoveToGraffiti()
+Robot -> Robot: Turn cleaner on
+
+@enduml

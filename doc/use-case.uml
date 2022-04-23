@@ -1,0 +1,17 @@
+@startuml
+:SmartCamera: --> (Graffiti recognition)
+:SmartCamera: --> (Robot)
+:SmartCamera: --> (Building a route)
+:Robot: --> (Motors)
+:Robot: --> (Cleaner)
+:Cleaner: --> (On)
+:Cleaner: --> (Of)
+:Motors: --> (Motor Right)
+:Motors: --> (Motor Left)
+:Motor Left: --> (Forward)
+:Motor Left: --> (Back)
+:Motor Left: --> (Stop)
+:Motor Right: --> (Forward)
+:Motor Right: --> (Back)
+:Motor Right: --> (Stop)
+@enduml

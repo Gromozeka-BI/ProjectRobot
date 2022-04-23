@@ -1,0 +1,8 @@
+@startuml
+
+SmartCamera - Robot: Build a route >
+SmartCamera -- Graffiti: recognize graffiti >
+Robot - Motors: start/stop >
+Robot - Cleaner: on/off >
+
+@enduml
