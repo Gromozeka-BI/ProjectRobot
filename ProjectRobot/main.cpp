@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include "Header.h"
+
+using namespace cv;
 using namespace std;
 
 class Software {
@@ -203,6 +205,7 @@ public:
 };
 
 int main() {
+	TestCam();
 	//PID test;
 	//cout << test.GetTest();
 	
@@ -232,7 +235,8 @@ int main() {
 		bob.ReturnRobot(motorRight, motorLeft, cleaner); // Passing the task to the robot
 	}
 	
-
+	
+	
 
 
 }
