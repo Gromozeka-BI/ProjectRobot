@@ -1,68 +1,8 @@
 ﻿#include <Math.h>
 #include <iostream>
 #include <cmath>
+#include "Header.h"
 using namespace std;
-class PID {
-	float kp, ki, kd;
-	int minOut, maxOut;
-	float integral;
-	float prevErr;
-	float dt;
-public:
-	PID() {
-		kp = 0;
-		ki = 0;
-		kd = 0;
-		minOut = 0;
-		maxOut = 0;
-		integral = 0;
-		prevErr = 0;
-		dt = 0;
-	}
-	void GetPID(float kp, float ki, float kd) {
-		this->kp = kp;
-		this->ki = ki;
-		this->kd = kd;
-	}
-	void GetMinMax(int minOut, int maxOut) {
-		this->minOut = minOut;
-		this->maxOut = maxOut;
-	}
-	void GetDt(float dt) {
-		this->dt = dt;
-	}
-	float computePID(float input) {
-		float err = input;
-		integral = integral + (float)err * dt * ki;
-		if (integral > maxOut) integral = maxOut;
-		if (integral < minOut) integral = minOut;
-
-		float D = (err - prevErr) / dt;
-		prevErr = err;
-
-		float out = err * kp + integral + D * kd;
-		if (out > maxOut) out = maxOut;
-		if (out < minOut) out = minOut;
-		return out;
-	}
-};
-
-/*int computePID(int number, float input, float kp, float ki, float kd, float dt, int minOut, int maxOut) {
-	float err = input;
-	static float integral[2]{ 0, 0 }, prevErr[2]{ 0, 0 };
-
-	integral[number] = integral[number] + (float)err * dt * ki;
-	if (integral[number] > maxOut) integral[number] = maxOut;
-	if (integral[number] < minOut) integral[number] = minOut;
-
-	float D = (err - prevErr[number]) / dt;
-	prevErr[number] = err;
-
-	float out = err * kp + integral[number] + D * kd;
-	if (out > maxOut) out = maxOut;
-	if (out < minOut) out = minOut;
-	return out;
-}*/
 
 class Software {
 private:
@@ -233,13 +173,13 @@ public:
 
 		PID ThrP;
 		PID AngP;
-		ThrP.GetPID(lP, lI, lD);
-		ThrP.GetMinMax(-100, 100);
-		ThrP.GetDt(dt);
+		ThrP.SetPID(lP, lI, lD);
+		ThrP.SetMinMax(-100, 100);
+		ThrP.SetDt(dt);
 		Thr = ThrP.computePID(l);
-		AngP.GetPID(aP, aI, aD);
-		AngP.GetMinMax(-100, 100);
-		AngP.GetDt(dt);
+		AngP.SetPID(aP, aI, aD);
+		AngP.SetMinMax(-100, 100);
+		AngP.SetDt(dt);
 		Ang = AngP.computePID(φ);
 
 		//...........
@@ -263,7 +203,9 @@ public:
 };
 
 int main() {
-
+	//PID test;
+	//cout << test.GetTest();
+	
 	Robot bob(false, false);
 	Robot bob2(false, false);
 	int angle = 0;
@@ -289,7 +231,7 @@ int main() {
 		cleaner = bob.TurnCleaner(XRobot, YRobot, XDirt, YDirt); // If it is close to dirt then turn on the cleaner
 		bob.ReturnRobot(motorRight, motorLeft, cleaner); // Passing the task to the robot
 	}
-
+	
 
 
 
