@@ -11,7 +11,7 @@ class PID {
 public:
 	PID() {
 		kp = 0;
-		ki = 0;
+		ki = 0; // test
 		kd = 0;
 		minOut = 0;
 		maxOut = 0;
